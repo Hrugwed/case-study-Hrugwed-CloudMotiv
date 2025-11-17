@@ -1,0 +1,63 @@
+{
+  "summary": {
+    "title": "Maersk Q2 2025 EBITDA Review",
+    "paragraphs": [
+      "No extraordinary or one-off items affecting EBITDA were reported in Maersk’s Q2 2025 results.",
+      "The report explicitly notes that EBITDA improvements stemmed from operational performance—including volume growth, cost control, and margin improvement across Ocean, Logistics & Services, and Terminals segments [1][2].",
+      "Gains or losses from asset sales, which could qualify as extraordinary items, are shown separately under EBIT and not included in EBITDA. The gain on sale of non-current assets was USD 25 m in Q2 2025, significantly lower than USD 208 m in Q2 2024, but these affect EBIT, not EBITDA [3]. Hence, Q2 2025 EBITDA reflects core operating activities without one-off extraordinary adjustments."
+    ]
+  },
+  "findings": [
+    {
+      "id": "finding-1",
+      "heading": "Page 3 — Highlights Q2 2025",
+      "page": 3,
+      "body": "EBITDA increase (USD 2.3 bn vs USD 2.1 bn prior year) attributed to operational improvements; no mention of extraordinary or one-off items. [1]",
+      "referenceId": "[1]",
+      "query": "EBITDA increase (USD 2.3 bn vs USD 2.1 bn prior year) attributed to operational improvements; no mention of extraordinary or one-off items."
+    },
+    {
+      "id": "finding-2",
+      "heading": "Page 5 — Review Q2 2025",
+      "page": 5,
+      "body": "EBITDA rise driven by higher revenue and cost control across all segments; no extraordinary gains or losses included. [2]",
+      "referenceId": "[2]",
+      "query": "EBITDA rise driven by higher revenue and cost control across all segments; no extraordinary gains or losses included."
+    },
+    {
+      "id": "finding-3",
+      "heading": "Page 15 — Condensed Income Statement",
+      "page": 15,
+      "body": "Gain on sale of non-current assets USD 25 m (vs USD 208 m prior year) reported separately below EBITDA; therefore, not part of EBITDA. [3]",
+      "referenceId": "[3]",
+      "query": "Gain on sale of non-current assets USD 25 m (vs USD 208 m prior year) reported separately below EBITDA; therefore, not part of EBITDA."
+    }
+  ],
+  "supportingEvidence": [
+    {
+      "id": "1",
+      "label": "[1]",
+      "page": 3,
+      "source": "A.P. Moller – Maersk Q2 2025 Interim Report (7 Aug 2025)",
+      "quote": "Maersk’s results continued to improve year-on-year … EBITDA of USD 2.3 bn (USD 2.1 bn) … driven by volume and other revenue growth in Ocean, margin improvements in Logistics & Services and significant top line growth in Terminals.",
+      "query": "Maersk’s results continued to improve year-on-year … EBITDA of USD 2.3 bn (USD 2.1 bn) … driven by volume and other revenue growth in Ocean, margin improvements in Logistics & Services and significant top line growth in Terminals."
+    },
+    {
+      "id": "2",
+      "label": "[2]",
+      "page": 5,
+      "source": "A.P. Moller – Maersk Q2 2025 Interim Report (7 Aug 2025)",
+      "quote": "EBITDA increased to USD 2.3 bn (USD 2.1 bn) … driven by higher revenue and cost management … Ocean’s EBITDA … slightly increased by USD 36 m … Logistics & Services contributed significantly with a USD 71 m increase … Terminals’ EBITDA increased by USD 50 m.",
+      "query": "EBITDA increased to USD 2.3 bn (USD 2.1 bn) … driven by higher revenue and cost management … Ocean’s EBITDA … slightly increased by USD 36 m … Logistics & Services contributed significantly with a USD 71 m increase … Terminals’ EBITDA increased by USD 50 m."
+    },
+    {
+      "id": "3",
+      "label": "[3]",
+      "page": 15,
+      "source": "A.P. Moller – Maersk Q2 2025 Interim Report (7 Aug 2025)",
+      "quote": "Gain on sale of non-current assets, etc., net 25 (208) … Profit before depreciation, amortisation and impairment losses, etc. (EBITDA) 2,298",
+      "query": "Gain on sale of non-current assets, etc., net 25 (208) … Profit before depreciation, amortisation and impairment losses, etc. (EBITDA) 2,298"
+    }
+  ]
+}
+
