@@ -121,7 +121,7 @@ function App() {
       }
 
       const sanitizedPageText = pageData.text.slice(0, 6000)
-      const geminiMatch = await requestGeminiMatch({
+      const { match: geminiMatch, error: geminiMessage } = await requestGeminiMatch({
         pageNumber: reference.page,
         pageText: sanitizedPageText,
         query: reference.query
@@ -130,6 +130,24 @@ function App() {
       if (matchRequestRef.current !== requestId) return
 
       if (!geminiMatch) {
+        if (
+          geminiMessage &&
+          geminiMessage.toLowerCase().includes('overload') &&
+          fuzzyResult?.substring
+        ) {
+          setPendingHighlight({
+            pageNumber: reference.page,
+            text: fuzzyResult.substring,
+            referenceLabel: reference.referenceId
+          })
+          setStatus(
+            `Gemini overloaded—using algorithmic match (score ${(
+              fuzzyResult.score ?? 0
+            ).toFixed(2)}).`
+          )
+          return
+        }
+
         setStatus(
           `Gemini could not locate ${reference.referenceId}. Please verify the PDF content.`
         )

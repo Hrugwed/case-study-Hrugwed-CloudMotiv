@@ -23,13 +23,16 @@ const useGemini = () => {
 
       const payload = await response.json()
       if (!response.ok) {
-        throw new Error(payload?.error || 'Gemini request failed')
+        const message = payload?.error || 'Gemini request failed'
+        setError(message)
+        return { match: '', error: message }
       }
 
-      return payload.match?.trim() || ''
+      const match = payload.match?.trim() || ''
+      return { match, error: null }
     } catch (err) {
       setError(err.message)
-      return ''
+      return { match: '', error: err.message }
     } finally {
       setLoading(false)
     }
