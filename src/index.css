@@ -26,6 +26,6 @@ body {
 }
 
 .textLayer span.highlight {
-  background-color: #fde68a;
-  color: #111827;
+  background-color: #fde047 !important;
+  color: #111827 !important;
 }
