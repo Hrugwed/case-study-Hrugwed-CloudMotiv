@@ -37,15 +37,12 @@ export default async function handler(req, res) {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          contents: [
-            {
-              parts: [{ text: prompt }]
-            }
-          ],
-          generationConfig: {
-            temperature: 0,
-            maxOutputTokens: 256
-          }
+          prompt: {
+            text: prompt
+          },
+          temperature: 0,
+          candidateCount: 1,
+          maxOutputTokens: 256
         })
       }
     )
@@ -61,7 +58,8 @@ export default async function handler(req, res) {
       result.candidates?.[0]?.content?.parts
         ?.map((part) => part.text || '')
         .join('')
-        .trim()
+        .trim() ||
+      result.candidates?.[0]?.text
 
     if (!candidate) {
       throw new Error('Gemini returned an empty response')
