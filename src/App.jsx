@@ -60,11 +60,16 @@ function App() {
 
   useEffect(() => {
     if (!pendingHighlight) return
-    const { pageNumber, text, referenceLabel } = pendingHighlight
+    const { pageNumber, text, fallbackText, referenceLabel } = pendingHighlight
     const targetLayer = textLayersRef.current.get(pageNumber)
     if (!targetLayer) return
 
-    const success = highlightExactText(targetLayer, text)
+    let success = highlightExactText(targetLayer, text)
+
+    if (!success && fallbackText && fallbackText !== text) {
+      success = highlightExactText(targetLayer, fallbackText)
+    }
+
     if (success) {
       setStatus(`Highlighted ${referenceLabel} on page ${pageNumber}.`)
     } else {
@@ -131,11 +136,11 @@ function App() {
 
       if (!geminiMatch) {
         if (fuzzyResult?.substring) {
-          setPendingHighlight({
-            pageNumber: reference.page,
-            text: fuzzyResult.substring,
-            referenceLabel: reference.referenceId
-          })
+        setPendingHighlight({
+          pageNumber: reference.page,
+          text: fuzzyResult.substring,
+          referenceLabel: reference.referenceId
+        })
           const reason = geminiMessage
             ? geminiMessage.charAt(0).toUpperCase() + geminiMessage.slice(1)
             : 'Gemini unavailable'
@@ -156,6 +161,7 @@ function App() {
       setPendingHighlight({
         pageNumber: reference.page,
         text: geminiMatch,
+        fallbackText: fuzzyResult?.substring,
         referenceLabel: reference.referenceId
       })
       setStatus(`Gemini located the passage for ${reference.referenceId}.`)
