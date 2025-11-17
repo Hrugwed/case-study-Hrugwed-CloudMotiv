@@ -130,18 +130,17 @@ function App() {
       if (matchRequestRef.current !== requestId) return
 
       if (!geminiMatch) {
-        if (
-          geminiMessage &&
-          geminiMessage.toLowerCase().includes('overload') &&
-          fuzzyResult?.substring
-        ) {
+        if (fuzzyResult?.substring) {
           setPendingHighlight({
             pageNumber: reference.page,
             text: fuzzyResult.substring,
             referenceLabel: reference.referenceId
           })
+          const reason = geminiMessage
+            ? geminiMessage.charAt(0).toUpperCase() + geminiMessage.slice(1)
+            : 'Gemini unavailable'
           setStatus(
-            `Gemini overloaded—using algorithmic match (score ${(
+            `${reason}; using algorithmic match (score ${(
               fuzzyResult.score ?? 0
             ).toFixed(2)}).`
           )
