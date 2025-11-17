@@ -55,7 +55,7 @@ const PdfViewer = ({ pdfDoc, onTextLayerReady }) => {
   return (
     <section
       ref={containerRef}
-      className="space-y-8"
+      className="h-full w-full overflow-auto"
       aria-label="Maersk PDF viewer"
     />
   )
