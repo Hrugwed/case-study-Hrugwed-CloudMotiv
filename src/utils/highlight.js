@@ -1,63 +1,77 @@
-const HIGHLIGHT_CLASS = 'highlight'
+const HIGHLIGHT_CLASS = 'highlight-span'
+const escapeRegex = (value = '') =>
+  value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+const normalizeMatchedText = (text = '') =>
+  text.replace(/\s+/g, ' ').trim()
 
-export const attachTextLayerMeta = (textLayer, textDivs, fullText) => {
-  if (!textLayer) return
+const findMatchBounds = (fullText, matchedText) => {
+  const sanitizedTarget = normalizeMatchedText(matchedText)
+  if (!sanitizedTarget) {
+    return { start: -1, end: -1 }
+  }
 
-  const ranges = []
+  const pattern = escapeRegex(sanitizedTarget).replace(/\\\s\+/g, '\\s+')
+  const regex = new RegExp(pattern, 'i')
+  const match = fullText.match(regex)
+
+  if (!match || typeof match.index !== 'number') {
+    return { start: -1, end: -1 }
+  }
+
+  const start = match.index
+  const end = start + match[0].length
+  return { start, end }
+}
+
+export const highlightSubstring = (matchedText, pageContainer) => {
+  if (!matchedText || !pageContainer) return false
+
+  const textLayer = pageContainer.querySelector('.textLayer')
+  if (!textLayer) return false
+
+  const spans = textLayer.querySelectorAll('span')
+  if (!spans.length) return false
+
+  const fullTextParts = []
+  const mapping = []
   let cursor = 0
 
-  textDivs.forEach((div) => {
-    const content = div.textContent ?? ''
+  spans.forEach((span) => {
+    const content = span.textContent ?? ''
     const start = cursor
     const end = start + content.length
-    ranges.push({ div, start, end })
+
+    mapping.push({ start, end, span })
+    fullTextParts.push(content)
     cursor = end
   })
 
-  textLayer.__pdfHighlightMeta = {
-    fullText: fullText ?? '',
-    ranges
-  }
-}
+  const fullText = fullTextParts.join('')
+  const { start, end } = findMatchBounds(fullText, matchedText)
 
-export const clearHighlights = (textLayer) => {
-  if (!textLayer) return
-  textLayer
+  if (start === -1 || end === -1) {
+    return false
+  }
+
+  document
     .querySelectorAll(`.${HIGHLIGHT_CLASS}`)
     .forEach((node) => node.classList.remove(HIGHLIGHT_CLASS))
-}
 
-export const highlightExactText = (textLayer, exactText) => {
-  if (!textLayer?.__pdfHighlightMeta || !exactText) return false
+  const highlightedSpans = []
 
-  const { fullText, ranges } = textLayer.__pdfHighlightMeta
-  const trimmedTarget = exactText.trim()
-  if (!trimmedTarget) return false
-
-  const startIndex = fullText.indexOf(trimmedTarget)
-  if (startIndex === -1) return false
-
-  const endIndex = startIndex + trimmedTarget.length
-
-  clearHighlights(textLayer)
-
-  ranges.forEach(({ div, start, end }) => {
-    if (end <= startIndex || start >= endIndex) {
-      return
+  mapping.forEach(({ span, start: spanStart, end: spanEnd }) => {
+    const overlaps = spanEnd > start && spanStart < end
+    if (overlaps) {
+      span.classList.add(HIGHLIGHT_CLASS)
+      highlightedSpans.push(span)
     }
-    div.classList.add(HIGHLIGHT_CLASS)
   })
 
-  const anchor = ranges.find(
-    ({ start, end }) => start < endIndex && end > startIndex
-  )
-
-  const viewTarget = anchor?.div || textLayer.closest('.pdf-page-wrapper') || textLayer
-  viewTarget?.scrollIntoView({
+  highlightedSpans[0]?.scrollIntoView({
     behavior: 'smooth',
     block: 'center'
   })
 
-  return true
+  return highlightedSpans.length > 0
 }
 

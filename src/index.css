@@ -25,7 +25,9 @@ body {
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-.textLayer span.highlight {
-  background-color: #fde047 !important;
+.highlight-span {
+  background: #fde047 !important;
   color: #111827 !important;
+  border-radius: 3px;
+  padding: 0 2px;
 }

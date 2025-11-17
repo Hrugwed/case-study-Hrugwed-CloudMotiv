@@ -1,8 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { EventBus, PDFPageView } from 'pdfjs-dist/legacy/web/pdf_viewer'
 import 'pdfjs-dist/web/pdf_viewer.css'
-import { textContentToString } from '../utils/extractPdfText'
-import { attachTextLayerMeta } from '../utils/highlight'
 
 const PdfViewer = ({ pdfDoc, onTextLayerReady }) => {
   const containerRef = useRef(null)
@@ -42,15 +40,7 @@ const PdfViewer = ({ pdfDoc, onTextLayerReady }) => {
         pageView.setPdfPage(page)
         await pageView.draw()
 
-        const textLayerDiv = pageView.textLayer?.textLayerDiv
-        const textContent = await page.getTextContent()
-        const pageText = textContentToString(textContent.items)
-        const textSpans = textLayerDiv
-          ? Array.from(textLayerDiv.querySelectorAll('span'))
-          : []
-
-        attachTextLayerMeta(textLayerDiv, textSpans, pageText)
-        onTextLayerReady?.(pageNumber, textLayerDiv, pageText)
+        onTextLayerReady?.(pageNumber, pageWrapper)
       }
     }
 

@@ -9,7 +9,7 @@ import AnalysisPanel from './components/AnalysisPanel'
 import analysisData from './data/analysis.json'
 import extractPdfText from './utils/extractPdfText'
 import { findBestFuzzyMatch, MATCH_THRESHOLD } from './utils/fuzzyMatch'
-import { highlightExactText } from './utils/highlight'
+import { highlightSubstring } from './utils/highlight'
 import useGemini from './hooks/useGemini'
 
 GlobalWorkerOptions.workerSrc = pdfWorkerUrl
@@ -20,7 +20,8 @@ function App() {
   const [status, setStatus] = useState('Loading Maersk.pdf …')
   const [activeReferenceId, setActiveReferenceId] = useState(null)
   const [pendingHighlight, setPendingHighlight] = useState(null)
-  const textLayersRef = useRef(new Map())
+  const [pageLayerVersion, setPageLayerVersion] = useState(0)
+  const pageContainersRef = useRef(new Map())
   const matchRequestRef = useRef(0)
 
   const { requestGeminiMatch, loading: geminiLoading, error: geminiError } =
@@ -61,13 +62,13 @@ function App() {
   useEffect(() => {
     if (!pendingHighlight) return
     const { pageNumber, text, fallbackText, referenceLabel } = pendingHighlight
-    const targetLayer = textLayersRef.current.get(pageNumber)
-    if (!targetLayer) return
+    const pageContainer = pageContainersRef.current.get(pageNumber)
+    if (!pageContainer) return
 
-    let success = highlightExactText(targetLayer, text)
+    let success = highlightSubstring(text, pageContainer)
 
     if (!success && fallbackText && fallbackText !== text) {
-      success = highlightExactText(targetLayer, fallbackText)
+      success = highlightSubstring(fallbackText, pageContainer)
     }
 
     if (success) {
@@ -77,7 +78,7 @@ function App() {
         `Match located for ${referenceLabel}, but highlighting failed. Try zooming or clicking again.`
       )
     }
-  }, [pendingHighlight])
+  }, [pendingHighlight, pageLayerVersion])
 
   useEffect(() => {
     if (geminiError) {
@@ -85,8 +86,10 @@ function App() {
     }
   }, [geminiError])
 
-  const handleTextLayerReady = useCallback((pageNumber, element) => {
-    textLayersRef.current.set(pageNumber, element)
+  const handleTextLayerReady = useCallback((pageNumber, pageContainer) => {
+    if (!pageContainer) return
+    pageContainersRef.current.set(pageNumber, pageContainer)
+    setPageLayerVersion((version) => version + 1)
   }, [])
 
   const runHybridMatch = useCallback(
