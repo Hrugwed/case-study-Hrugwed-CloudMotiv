@@ -12,6 +12,7 @@ import { findBestFuzzyMatch, MATCH_THRESHOLD } from './utils/fuzzyMatch'
 import { highlightSubstring } from './utils/highlight'
 import useGemini from './hooks/useGemini'
 
+
 GlobalWorkerOptions.workerSrc = pdfWorkerUrl
 
 function App() {
