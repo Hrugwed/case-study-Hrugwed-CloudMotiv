@@ -26,7 +26,7 @@ const PdfViewer = ({ pdfDoc, onTextLayerReady }) => {
 
         const pageWrapper = document.createElement('div')
         pageWrapper.className =
-          'relative mb-6 overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm'
+          'pdf-page-wrapper relative mb-6 overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm'
         container.appendChild(pageWrapper)
 
         const pageView = new PDFPageView({

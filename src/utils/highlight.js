@@ -52,7 +52,8 @@ export const highlightExactText = (textLayer, exactText) => {
     ({ start, end }) => start < endIndex && end > startIndex
   )
 
-  anchor?.div?.scrollIntoView({
+  const viewTarget = anchor?.div || textLayer.closest('.pdf-page-wrapper') || textLayer
+  viewTarget?.scrollIntoView({
     behavior: 'smooth',
     block: 'center'
   })
