@@ -20,11 +20,38 @@ export const attachTextLayerMeta = (textLayer, textDivs, fullText) => {
   }
 }
 
+const applyInlineHighlight = (div) => {
+  if (!div) return
+  if (!div.dataset.prevBackground) {
+    div.dataset.prevBackground = div.style.backgroundColor || ''
+  }
+  if (!div.dataset.prevColor) {
+    div.dataset.prevColor = div.style.color || ''
+  }
+  div.style.backgroundColor = '#fde68a'
+  div.style.color = '#111827'
+}
+
+const resetInlineHighlight = (div) => {
+  if (!div) return
+  if (div.dataset.prevBackground !== undefined) {
+    div.style.backgroundColor = div.dataset.prevBackground
+    delete div.dataset.prevBackground
+  }
+  if (div.dataset.prevColor !== undefined) {
+    div.style.color = div.dataset.prevColor
+    delete div.dataset.prevColor
+  }
+}
+
 export const clearHighlights = (textLayer) => {
   if (!textLayer) return
   textLayer
     .querySelectorAll(`.${HIGHLIGHT_CLASS}`)
-    .forEach((node) => node.classList.remove(HIGHLIGHT_CLASS))
+    .forEach((node) => {
+      node.classList.remove(HIGHLIGHT_CLASS)
+      resetInlineHighlight(node)
+    })
 }
 
 export const highlightExactText = (textLayer, exactText) => {
@@ -46,6 +73,7 @@ export const highlightExactText = (textLayer, exactText) => {
       return
     }
     div.classList.add(HIGHLIGHT_CLASS)
+    applyInlineHighlight(div)
   })
 
   const anchor = ranges.find(
