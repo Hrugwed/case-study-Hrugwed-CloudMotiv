@@ -58,17 +58,32 @@ export default async function handler(req, res) {
     }
 
     const result = await response.json()
-    const candidate =
-      result.candidates?.[0]?.content?.parts
+    const candidate = result.candidates?.[0]
+    const matchText =
+      candidate?.content?.parts
         ?.map((part) => part.text || '')
         .join('')
         .trim() || ''
 
-    if (!candidate) {
-      throw new Error('Gemini returned an empty response')
+    if (!matchText) {
+      const finishReason = candidate?.finishReason
+      const safetyBlock = candidate?.safetyRatings?.find(
+        (rating) => rating.probability === 'HIGH' || rating.probability === 'MEDIUM'
+      )
+      const promptBlock = result.promptFeedback?.blockReason
+      const blockMessage =
+        safetyBlock?.category ||
+        finishReason ||
+        promptBlock ||
+        'Gemini returned an empty response'
+
+      res.status(422).json({
+        error: `Gemini could not return text: ${blockMessage}`
+      })
+      return
     }
 
-    res.status(200).json({ match: candidate })
+    res.status(200).json({ match: matchText })
   } catch (error) {
     console.error(error)
     res.status(500).json({ error: error.message || 'Gemini request failed' })
