@@ -32,17 +32,20 @@ export default async function handler(req, res) {
 
   try {
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateText?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          prompt: {
-            text: prompt
-          },
-          temperature: 0,
-          candidateCount: 1,
-          maxOutputTokens: 256
+          contents: [
+            {
+              parts: [{ text: prompt }]
+            }
+          ],
+          generationConfig: {
+            temperature: 0,
+            maxOutputTokens: 256
+          }
         })
       }
     )
@@ -54,12 +57,10 @@ export default async function handler(req, res) {
 
     const result = await response.json()
     const candidate =
-      result.candidates?.[0]?.output ||
       result.candidates?.[0]?.content?.parts
         ?.map((part) => part.text || '')
         .join('')
-        .trim() ||
-      result.candidates?.[0]?.text
+        .trim() || ''
 
     if (!candidate) {
       throw new Error('Gemini returned an empty response')
