@@ -19,7 +19,7 @@ const AnalysisPanel = ({
   if (!data) return null
 
   return (
-    <aside className="w-full max-w-xl overflow-y-auto border-l border-slate-200 px-8 py-6 text-base leading-relaxed text-slate-800">
+    <aside className="w-full lg:w-[42%] overflow-y-auto border-l border-slate-200 px-8 py-6 text-base leading-relaxed text-slate-800">
       <div className="space-y-4">
         <h2 className="text-2xl font-semibold text-ink">{data.summary.title}</h2>
         {data.summary.paragraphs.map((paragraph, index) => (

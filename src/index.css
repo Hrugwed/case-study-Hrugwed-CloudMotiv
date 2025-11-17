@@ -28,6 +28,5 @@ body {
 .highlight-span {
   background: #fde047 !important;
   color: #111827 !important;
-  border-radius: 3px;
-  padding: 0 2px;
+  border-radius: 2px;
 }

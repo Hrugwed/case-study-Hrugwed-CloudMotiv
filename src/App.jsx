@@ -202,7 +202,7 @@ function App() {
       </header>
 
       <div className="flex flex-col gap-6 px-6 py-6 lg:flex-row">
-        <div className="w-full rounded-2xl border border-slate-200 bg-white p-4 shadow-sm lg:flex-1">
+        <div className="w-full rounded-2xl border border-slate-200 bg-white p-4 shadow-sm lg:w-[58%]">
           <PdfViewer
             pdfDoc={pdfDoc}
             onTextLayerReady={handleTextLayerReady}
